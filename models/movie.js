@@ -49,9 +49,9 @@ const movieSchema = new mongoose.Schema(
       }
     },
     owner: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref:user
+      ref:'user'
     },
     movieId: {
       type: Number,
@@ -67,3 +67,4 @@ const movieSchema = new mongoose.Schema(
     }
   }
 )
+module.exports = mongoose.model('movie', movieSchema);
