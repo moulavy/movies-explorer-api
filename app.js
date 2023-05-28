@@ -9,7 +9,7 @@ const mainRouter = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const corsCheck = require('./middlewares/cors');
 
-const { PORT = 3007 } = process.env;
+const { PORT = 3004 } = process.env;
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/bifilmsdb', {

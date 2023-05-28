@@ -1,4 +1,4 @@
-
+const mongoose = require('mongoose');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const Movie = require('../models/movie');
@@ -17,7 +17,7 @@ module.exports.createMovie = (req, res, next) => {
       res.status(201).send({ data: movie });
     })
     .catch((err) => {
-      if (err instanceof ValidationError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Переданы некорректные данные при создании фильма.'))
       }
       return next(err);
@@ -38,7 +38,7 @@ module.exports.deleteMovie = (req, res, next) => {
         .catch(next);
     })
     .catch((err) => {
-      if (err instanceof DocumentNotFoundError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         return next(new NotFoundError('Фильм по указанному id не найден в сохраненных.'))
       }
       return next(err);

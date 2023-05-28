@@ -8,4 +8,6 @@ router.patch('/me', celebrate({
     email:Joi.string().email().required(),
     name: Joi.string().min(2).max(30).required()
   }),
-}) ,updateInfoUser);
+}), updateInfoUser);
+
+module.exports = router;

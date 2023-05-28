@@ -1,10 +1,13 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 const { NODE_ENV, JWT_SECRET } = process.env;
+
+const User = require('../models/user');
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -18,7 +21,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         return next(new ConflictError('Пользователь с таким email уже существует'));
-      } if (err instanceof ValidationError) {
+      } if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       }
       return next(err);
@@ -26,9 +29,11 @@ module.exports.createUser = (req, res, next) => {
 }
 
 module.exports.login = (req, res, next) => {
+  console.log("Зашли в логин")
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
+      console.log({ email, password });
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key-123', { expiresIn: '7d' });
       res.cookie('token', token, {
         maxAge: 3600000 * 24 * 7,
@@ -51,7 +56,7 @@ module.exports.getInfoUser = (req, res, next) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof DocumentNotFoundError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         return next(new NotFoundError('Пользователь по указанному id не найден'))
       }
       return next(err);
@@ -65,10 +70,10 @@ module.exports.updateInfoUser = (req, res, next) => {
     .orFail()
     .then((user) => { res.send({ data: user }) })
     .catch((err) => {
-      if (err instanceof DocumentNotFoundError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
-      else if (err instanceof ValidationError)
+      else if (err instanceof mongoose.Error.ValidationError)
       {
         return next(new BadRequestError('При обновлении информации пользователя переданы некорректные данные'))
       }

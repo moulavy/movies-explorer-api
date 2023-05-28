@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { getMovies, createMovie, deleteMovie } = require('../controllers/movies');
+const regexURL = require('../utils/regex')
 
 router.get('/', getMovies);
 router.post('/', celebrate({
@@ -22,4 +23,6 @@ router.delete('/id', celebrate({
   params: Joi.object().keys({
     movieSaveId: Joi.string().hex().length(24).required(),
   }),
-}),deleteMovie)
+}), deleteMovie);
+
+module.exports = router;
