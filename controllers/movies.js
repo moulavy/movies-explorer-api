@@ -28,6 +28,9 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieSaveId)
     .orFail()
     .then((movie) => {
+      if (movie.owner._id.toString() !== req.user._id) {
+        return next(new ForbiddenError('Нельзя удалить чужой фильм.'));
+      }
       return Movie.deleteOne({ _id: movie._id })
         .then((movieDel) => {
           res.send({ data: movie });
