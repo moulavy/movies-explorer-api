@@ -4,9 +4,11 @@ const NotFoundError = require('../errors/NotFoundError');
 const Movie = require('../models/movie');
 
 module.exports.getMovies = (req, res, next) => {
-  const { userId } = req.user._id;
+  const  userId  = req.user._id;
   Movie.find({ owner: userId })
-    .then((cards) => res.send(cards))
+    .then((movies) => {
+      res.send(movies)
+    })
   .catch(next)
 }
 
