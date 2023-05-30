@@ -51,7 +51,7 @@ module.exports.logout = (req, res) => {
 
 //возвращает информацию о пользователе
 module.exports.getInfoUser = (req, res, next) => {
-  const { _id } = req.user._id;
+  const  _id = req.user._id;
   User.findById(_id)
     .orFail()
     .then((user) => res.send({ data: user }))
