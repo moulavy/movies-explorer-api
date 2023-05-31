@@ -1,31 +1,48 @@
 const mongoose = require('mongoose');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 const Movie = require('../models/movie');
 
 module.exports.getMovies = (req, res, next) => {
-  const  userId  = req.user._id;
+  const userId = req.user._id;
   Movie.find({ owner: userId })
     .then((movies) => {
-      res.send(movies)
+      res.send(movies);
     })
-  .catch(next)
-}
+    .catch(next);
+};
 
 module.exports.createMovie = (req, res, next) => {
-  const { country, director, duration, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId } = req.body;
+  const {
+    country, director, duration, year, description, image, trailerLink, nameRU, nameEN,
+    thumbnail, movieId,
+  } = req.body;
   const userId = req.user._id;
-  Movie.create({ country, director, duration, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId,owner:userId })
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: userId,
+  })
     .then((movie) => {
       res.status(201).send({ data: movie });
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return next(new BadRequestError('Переданы некорректные данные при создании фильма.'))
+        return next(new BadRequestError('Переданы некорректные данные при создании фильма.'));
       }
       return next(err);
     });
-}
+};
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieSaveId)
@@ -35,15 +52,15 @@ module.exports.deleteMovie = (req, res, next) => {
         return next(new ForbiddenError('Нельзя удалить чужой фильм.'));
       }
       return Movie.deleteOne({ _id: movie._id })
-        .then((movieDel) => {
+        .then(() => {
           res.send({ data: movie });
         })
         .catch(next);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        return next(new NotFoundError('Фильм по указанному id не найден в сохраненных.'))
+        return next(new NotFoundError('Фильм по указанному id не найден в сохраненных.'));
       }
       return next(err);
     });
-}
+};
