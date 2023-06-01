@@ -45,7 +45,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('token').send('Вышли');
+  res.clearCookie('token').send({ message:'Вышли'});
 };
 
 // возвращает информацию о пользователе
@@ -71,6 +71,9 @@ module.exports.updateInfoUser = (req, res, next) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
         return next(new NotFoundError('Пользователь по указанному id не найден.'));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь с таким email уже существует'));
       }
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('При обновлении информации пользователя переданы некорректные данные'));
