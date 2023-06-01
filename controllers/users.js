@@ -47,7 +47,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('token').send({ message:'Вышли'});
+  res.clearCookie('token').send({ message: 'Вышли' });
 };
 
 // возвращает информацию о пользователе
