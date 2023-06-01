@@ -12,6 +12,9 @@ const corsCheck = require('./middlewares/cors');
 const { PORT = 3000, NODE_ENV, MONGO_URL } = process.env;
 const app = express();
 
+// mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
+//   useNewUrlParser: true,
+// });
 mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
 });
