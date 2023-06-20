@@ -7,7 +7,8 @@ const CONFLICT_ERROR_CODE = 409;
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const ALLOWED_CORS = [
   'http://localhost:3000',
-
+  'http://movies.moulavy.nomoredomains.rocks/',
+  'https://movies.moulavy.nomoredomains.rocks/'
 ];
 
 module.exports = {
