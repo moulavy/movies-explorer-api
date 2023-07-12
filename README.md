@@ -3,3 +3,4 @@
 
 ## Ссылки на проект
 Backend https://api.movies.moulavy.nomoredomains.rocks/
+Frontend https://movies.moulavy.nomoredomains.rocks/
